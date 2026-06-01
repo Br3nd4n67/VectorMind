@@ -33,7 +33,6 @@ A complete guide to replacing Vector's cloud dependency with a local LLM stack, 
 > **OSKR** (Open Source Kit for Robots) is required -- standard Vector firmware locks out local server redirects. See [Part 1](#part-1-getting-vector-online).
 
 Optional:
-- **Raspberry Pi 5** (or any Linux box) for the tornado weather dashboard
 
 ---
 
@@ -340,7 +339,7 @@ Vector will say *"Alright. Look at me and I'll remember you as [name]."* then st
 
 ### 3.4 Firewall
 
-vector-ai binds on `0.0.0.0:8000` so a Pi or other device can call it over Tailscale. The supervisor automatically applies Windows Firewall rules at startup to restrict port 8000 to:
+vector-ai binds on `0.0.0.0:8000` so external devices can call it over Tailscale. The supervisor automatically applies Windows Firewall rules at startup to restrict port 8000 to:
 - `127.0.0.1` -- local chipper calls
 - `100.64.0.0/10` -- Tailscale network only
 
@@ -348,64 +347,7 @@ Nothing on the open internet can reach it.
 
 ---
 
-## Part 4: Tornado Weather Dashboard (Optional -- Pi required)
-
-A Flask dashboard on a Raspberry Pi that displays NWS tornado warnings, watches, winter alerts, and hurricane data -- and has Vector announce new warnings out loud.
-
-### 4.1 Pi Setup
-
-```bash
-pip install flask requests
-```
-
-Copy `tornado_dashboard_server.py` to your Pi and set:
-```python
-VECTOR_AI_URL = "http://YOUR_WINDOWS_TAILSCALE_IP:8000"
-```
-
-Run as a systemd service:
-```ini
-# /etc/systemd/system/tornado-dashboard.service
-[Unit]
-Description=Tornado Dashboard
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/python3 /home/brendan/tornado-dashboard/server.py
-WorkingDirectory=/home/brendan/tornado-dashboard
-Restart=always
-User=brendan
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl enable tornado-dashboard
-sudo systemctl start tornado-dashboard
-```
-
-### 4.2 How the Announce Works
-
-1. Dashboard polls NWS every 60s
-2. New tornado warning detected â†' `sent_raw` key not seen before
-3. Pi calls `POST http://WINDOWS_TAILSCALE:8000/v1/weather_announce` with alert data
-4. vector-ai generates one in-character line using llama3.3:70b
-5. vector-ai calls chipper's `say_text` SDK endpoint
-6. Vector speaks it
-
-Cold-start: if the model isn't loaded, vector-ai waits up to 5 minutes for Ollama to load it before giving up. A real warning is worth the wait.
-
-### 4.3 Test It
-
-```bash
-# From the Pi:
-curl "http://localhost:8082/test/fire?key=0pEtEyDv5VJrRkdMY8hE&type=spotter&duration=60"
-```
-
-Vector should say something dry about a confirmed tornado in Kansas.
-
----
+## Part 5---
 
 ## Part 5: Settings Pages
 
@@ -456,9 +398,9 @@ pip install yt-dlp
 
 ---
 
-## Part 6: Vector Status Card (Pi)
+## Part 6: Vector Status Card
 
-A real-time dashboard showing what Vector is doing, served from the tornado dashboard Pi at `http://PI_IP:8082/vector` or via Tailscale.
+A real-time dashboard showing what Vector is doing, accessible at `http://localhost:8000/vector`.
 
 **Panels:**
 - **Camera** -- live MJPEG feed from Vector's front camera (auto-reconnects every 25s)
@@ -489,12 +431,6 @@ Color key:
 
 
 ---
-
-## Driving Vector
-
-For keyboard/controller driving, use **[Vector Explorer](https://weekendrobot.com/vectorexplorer/)** -- a free Windows app that gives you WASD control, camera view, and animation triggers. It connects directly to Vector over your LAN and works alongside VectorMind with no conflicts (just stop the supervisor first if you hit behavior control issues).
-
-------
 
 ## Troubleshooting
 
