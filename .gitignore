@@ -34,6 +34,7 @@ ollama.log
 # ── Deployment / patch scripts (machine-specific, not for repo) ───────────────
 patch_*.py
 install_*.py
+fix_*.py
 
 # ── Personal / separate projects ──────────────────────────────────────────────
 tornado_dashboard_server.py
