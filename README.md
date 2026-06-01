@@ -180,23 +180,23 @@ Rather than managing three separate processes, a single supervisor script owns t
 
 ```
 vector-pod/
-â"œâ"€â"€ supervisor.py           # Master process -- starts/monitors everything
-â"œâ"€â"€ chipper.log             # chipper output
-â"œâ"€â"€ vector-ai.log           # vector-ai output
-â"œâ"€â"€ supervisor.log          # supervisor output
-â"œâ"€â"€ watch.ps1               # Live log monitor (color-coded)
-â"œâ"€â"€ wire-pod/
-â"‚   â""â"€â"€ chipper/
-â"‚       â"œâ"€â"€ chipper-whisper.exe   # Vector's cloud replacement
-â"‚       â"œâ"€â"€ apiConfig.json        # LLM config + system prompt
-â"‚       â""â"€â"€ jdocs/
-â"‚           â""â"€â"€ botSdkInfo.json   # Enrolled robot registry
-â""â"€â"€ vector-ai/
-    â"œâ"€â"€ service.py          # FastAPI LLM proxy + custom endpoints
-    â"œâ"€â"€ memory.py           # SQLite memory store
-    â"œâ"€â"€ memory.db           # Persistent memory database
-    â"œâ"€â"€ .env                # Ollama model config
-    â""â"€â"€ venv/               # Python virtualenv
+"-"-"- supervisor.py           # Master process -- starts/monitors everything
+"-"-"- chipper.log             # chipper output
+"-"-"- vector-ai.log           # vector-ai output
+"-"-"- supervisor.log          # supervisor output
+"-"-"- watch.ps1               # Live log monitor (color-coded)
+"-"-"- wire-pod/
+"-   """-"- chipper/
+"-       "-"-"- chipper-whisper.exe   # Vector's cloud replacement
+"-       "-"-"- apiConfig.json        # LLM config + system prompt
+"-       """-"- jdocs/
+"-           """-"- botSdkInfo.json   # Enrolled robot registry
+"""-"- vector-ai/
+    "-"-"- service.py          # FastAPI LLM proxy + custom endpoints
+    "-"-"- memory.py           # SQLite memory store
+    "-"-"- memory.db           # Persistent memory database
+    "-"-"- .env                # Ollama model config
+    """-"- venv/               # Python virtualenv
 ```
 
 ### 2.2 Python Environment
@@ -307,14 +307,14 @@ vector-ai is a FastAPI service that proxies LLM calls and handles custom feature
 | Endpoint | What it does |
 |---|---|
 | `POST /v1/chat/completions` | Main LLM proxy -- chipper calls this for all voice responses |
-| `POST /v1/sensor_reaction` | Pickup/putdown/touch â†' one dry in-character line. Skips if model cold (uses chipper fallback) |
+| `POST /v1/sensor_reaction` | Pickup/putdown/touch --' one dry in-character line. Skips if model cold (uses chipper fallback) |
 | `POST /v1/weather_event` | Takes alert data, returns one line. Waits up to 300s for cold model |
 | `POST /v1/weather_announce` | Same + speaks through Vector via chipper say_text |
 | `POST /v1/enroll_face` | Triggers Vector's face-learning sequence |
 | `GET /v1/enrolled_faces` | Lists enrolled faces |
 | `POST /v1/state/face_seen` | Chipper calls this when a face is observed |
 | `GET /v1/state/face` | Current face state |
-| `POST /v1/ambient` | Idle camera frame â†' comment on novelty (or silence) |
+| `POST /v1/ambient` | Idle camera frame --' comment on novelty (or silence) |
 | `POST /v1/proactive_greeting` | Greet a recognized face that just appeared |
 | `GET /v1/memory/list` | All stored memories |
 | `POST /v1/memory/remember` | Add a memory manually |
@@ -390,8 +390,8 @@ pip install yt-dlp
 ```
 
 1. Paste a YouTube URL
-2. Hit **â-¶ Play on Vector**
-3. Status updates: Downloading â†' Converting â†' Playing
+2. Hit **-¶ Play on Vector**
+3. Status updates: Downloading --' Converting --' Playing
 4. Recently played tracks appear below for one-click replay
 
 > Vector's speaker runs at 8kHz mono -- it sounds like a small radio, but it works.
@@ -423,11 +423,11 @@ powershell -ExecutionPolicy Bypass -File C:\path\to\vector-pod\watch.ps1
 ```
 
 Color key:
-- ðŸŸ¡ Yellow -- what Whisper transcribed
-- ðŸŸ¢ Green -- LLM response sentences streaming out
-- ðŸ"µ Cyan -- intent matched
-- ðŸŸ£ Magenta -- sensor events (pickup/putdown/touch)
-- ðŸ"´ Red -- errors
+- ð--¡ Yellow -- what Whisper transcribed
+- ð--¢ Green -- LLM response sentences streaming out
+- ð-"µ Cyan -- intent matched
+- ð--£ Magenta -- sensor events (pickup/putdown/touch)
+- ð-"´ Red -- errors
 
 
 ---
