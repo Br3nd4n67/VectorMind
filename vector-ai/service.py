@@ -1165,6 +1165,21 @@ async def generate(messages: List[Message], temperature: float = 1.0) -> AsyncIt
         _robot_state["last_heard_ts"] = _time.time()
         _emit("heard", text=last_user_text)
 
+    # -- Drive command intercept -----------------------------------------------
+    # Detect movement phrases before hitting the LLM. If matched, assume
+    # behavior control, drive for the specified duration, then release.
+    drive_cmd = _detect_drive_command(last_user_text)
+    if drive_cmd and not has_image:
+        spoken, lw, rw, duration = drive_cmd
+        print(f"[drive] {last_user_text!r} -> lw={lw} rw={rw} for {duration}s: {spoken!r}")
+        asyncio.create_task(_execute_drive(lw, rw, duration))
+        _emit("sensor", event="drive", response=spoken)
+        yield sse_chunk(spoken)
+        yield sse_chunk("{{eyeColor||teal}}")
+        yield sse_chunk("", finish="stop")
+        yield "data: [DONE]\n\n"
+        return
+
     # Vision-intent backstop: if the user is clearly asking to look at something
     # and no photo is attached yet, force the camera command rather than letting
     # the LLM hallucinate from stale conversation history. No verbal preamble â€”
@@ -1356,7 +1371,7 @@ _PAGE_SHELL = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vector â€” {title}</title>
+<title>VectorMind - {title}</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{background:#08080f;color:#ddd;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}}
@@ -1959,6 +1974,43 @@ async def enrolled_faces():
 # is picked up, set down, or petted. The response is whatever line Vector
 # would utter in his Marvin/Bender/Fry voice. No animation/eye/getImage
 # commands â€” those would never be heard since chipper just calls SayText.
+
+
+# Drive commands -- voice-triggered movement intercepted before the LLM
+_DRIVE_PATTERNS = [
+    (re.compile(r"\b(back\s*up|go\s*back|reverse|move\s*back)\b", re.I),       -200, -200, 2.0, "Backing up."),
+    (re.compile(r"\b(go\s*forward|move\s*forward|drive\s*forward)\b", re.I),    200,  200, 2.0, "Going forward."),
+    (re.compile(r"\b(turn\s*left|spin\s*left|rotate\s*left)\b", re.I),         -150,  150, 1.5, "Turning left."),
+    (re.compile(r"\b(turn\s*right|spin\s*right|rotate\s*right)\b", re.I),       150, -150, 1.5, "Turning right."),
+    (re.compile(r"\b(spin\s*around|turn\s*around|do\s*a\s*(spin|360))\b", re.I), 200, -200, 3.2, "Spinning around."),
+    (re.compile(r"\b(stop|halt|freeze)\b", re.I),                                    0,    0, 0.0, "Stopping."),
+    (re.compile(r"\b(come\s*here|come\s*to\s*me)\b", re.I),                     200,  200, 2.5, "On my way."),
+]
+
+def _detect_drive_command(text):
+    for pattern, lw, rw, dur, spoken in _DRIVE_PATTERNS:
+        if pattern.search(text):
+            return spoken, lw, rw, dur
+    return None
+
+async def _execute_drive(lw, rw, duration):
+    """Assume behavior control, drive for duration, stop, release."""
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(10.0)) as client:
+            await client.get("http://127.0.0.1:8080/api-sdk/assume_behavior_control",
+                params={"serial": VECTOR_SERIAL, "priority": "override_behaviors"})
+            if duration > 0:
+                await client.get("http://127.0.0.1:8080/api-sdk/move_wheels",
+                    params={"serial": VECTOR_SERIAL, "lw": int(lw), "rw": int(rw)})
+                await asyncio.sleep(duration)
+                await client.get("http://127.0.0.1:8080/api-sdk/move_wheels",
+                    params={"serial": VECTOR_SERIAL, "lw": 0, "rw": 0})
+            await client.get("http://127.0.0.1:8080/api-sdk/release_behavior_control",
+                params={"serial": VECTOR_SERIAL})
+            print(f"[drive] done lw={lw} rw={rw} dur={duration}s")
+    except Exception as e:
+        print(f"[drive] error: {e}")
+
 
 _SENSOR_SYSTEM = (
     "You are Vector, a small desktop robot. Dry-witted, knowledgeable, "
@@ -2599,6 +2651,8 @@ async def cam_proxy():
         media_type="multipart/x-mixed-replace; boundary=--boundary",
         headers={"Cache-Control": "no-cache"},
     )
+
+
 
 
 
