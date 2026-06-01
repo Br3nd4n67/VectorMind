@@ -2667,7 +2667,7 @@ DISPLAY_PAGE = """<!DOCTYPE html>
   <div id="branding">
     <div class="title">Tornado Monitor</div>
     <div class="sub">tornadowatch.org &mdash; Live NWS Feed</div>
-    <div style="font-size:0.7rem;letter-spacing:0.14em;color:#fff;margin-top:4px;text-transform:uppercase;font-weight:800;opacity:0.85">by Brendan G</div>
+    <div style="font-size:0.7rem;letter-spacing:0.14em;color:#fff;margin-top:4px;text-transform:uppercase;font-weight:800;opacity:0.85">by Br3nd4n67</div>
   </div>
   <div id="count-box">
     <div id="warning-count">0</div>
@@ -3519,7 +3519,7 @@ def history():
     }}).catch(function(){{}});
   }}, 30000); }})();
 </script>
-<div style="position:fixed;bottom:10px;right:14px;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;color:#fff;opacity:0.4;text-transform:uppercase;pointer-events:none;user-select:none">by Brendan G</div>
+<div style="position:fixed;bottom:10px;right:14px;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;color:#fff;opacity:0.4;text-transform:uppercase;pointer-events:none;user-select:none">by Br3nd4n67</div>
 </body>
 </html>"""
 
@@ -4576,5 +4576,6 @@ if __name__ == "__main__":
     threading.Thread(target=winter_poller,    daemon=True).start()
     log.info("Tornado Dashboard starting on port %d", PORT)
     app.run(host="0.0.0.0", port=PORT, threaded=True)
+
 
 
