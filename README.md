@@ -12,7 +12,6 @@ A complete guide to replacing Vector's cloud dependency with a local LLM stack, 
 - **Sensor reactions** -- pickup, putdown, and touch trigger dry in-character responses
 - **Ambient awareness** -- he notices things on his desk when idle and remarks on them
 - **Proactive greetings** -- he greets you by name when you sit down
-- **Weather announces** -- real NWS tornado warnings make him say something specific about them
 - **Mood system** -- a persistent inner state that colours his tone, persists across restarts
 - **Personality switcher** -- swap between presets (sardonic, helpful, kid-friendly, sailor, custom) at `localhost:8000/settings` with no restart
 - **YouTube music** -- paste a URL at `localhost:8000/music`, Vector plays it through his speaker
@@ -409,8 +408,6 @@ A real-time dashboard showing what Vector is doing, accessible at `http://localh
 - **Activity Log** -- real-time stream of heard/said/sensor/face/weather events with ages
 - **Mood** -- his current inner state from the background mood reflection loop
 
-The card is also accessible from Windows/Mac via Tailscale with CORS properly configured. Navigate to it from the launcher tile on the Pi or directly via URL.
-
 ---
 
 ## Live Log Monitor
@@ -428,7 +425,6 @@ Color key:
 - ð-"µ Cyan -- intent matched
 - ð--£ Magenta -- sensor events (pickup/putdown/touch)
 - ð-"´ Red -- errors
-
 
 ---
 
@@ -466,10 +462,4 @@ systemctl start anki-robot.target
 - **[Ollama](https://ollama.com)** -- local LLM serving
 - **[vector-go-sdk](https://github.com/fforchino/vector-go-sdk)** by fforchino -- Go SDK for Vector
 - The OSKR/wireOS firmware and the community keeping Vector alive
-
-
-
-
-
-
 
