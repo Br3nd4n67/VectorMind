@@ -1,0 +1,46 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+.venv/
+env/
+
+# ── Environment / secrets ─────────────────────────────────────────────────────
+vector-ai/.env
+# Keep .env.example (that's the template for new users)
+
+# ── Persistent data (machine-specific, never share) ──────────────────────────
+vector-ai/memory.db
+vector-ai/music_library.json
+tornado-dashboard/history.db
+
+# ── Wire-pod generated files ──────────────────────────────────────────────────
+wire-pod/chipper/session-certs/
+wire-pod/chipper/jdocs/
+wire-pod/chipper/epod/
+wire-pod/chipper/botSdkInfo.json
+wire-pod/chipper/data/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+*.log.old
+supervisor.log
+chipper.log
+vector-ai.log
+ollama.log
+
+# ── Deployment / patch scripts (machine-specific, not for repo) ───────────────
+patch_*.py
+install_*.py
+
+# ── OS noise ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Build artifacts ───────────────────────────────────────────────────────────
+*.exe
+dist/
+build/
