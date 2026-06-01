@@ -329,7 +329,7 @@ Once the stack is running, enroll your face so Vector knows who you are:
 # Look directly at Vector, then run:
 curl -X POST http://127.0.0.1:8000/v1/enroll_face \
   -H "Content-Type: application/json" \
-  -d '{"name": "Brendan"}'
+  -d '{"name": "Br3nd4n"}'
 ```
 
 Vector will say *"Alright. Look at me and I'll remember you as [name]."* then start his face-learning sequence. Takes about 10 seconds. After this:
