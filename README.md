@@ -1,22 +1,22 @@
-﻿# VectorMind â€” Local AI Stack for Anki/DDL Vector
+# VectorMind â€" Local AI Stack for Anki/DDL Vector
 
-A complete guide to replacing Vector's cloud dependency with a local LLM stack, giving him a persistent personality, memory, weather awareness, and sensor reactions â€” all running on your own hardware with no subscription.
+A complete guide to replacing Vector's cloud dependency with a local LLM stack, giving him a persistent personality, memory, weather awareness, and sensor reactions â€" all running on your own hardware with no subscription.
 
 ---
 
 ## What You Get
 
-- Vector talks to **llama3.3:70b** running locally via Ollama â€” full personality, no cloud latency
-- **Persistent memory** â€” he remembers people, facts, and conversations across sessions
-- **Face recognition** â€” he knows who he's talking to and scopes memory to them
-- **Sensor reactions** â€” pickup, putdown, and touch trigger dry in-character responses
-- **Ambient awareness** â€” he notices things on his desk when idle and remarks on them
-- **Proactive greetings** â€” he greets you by name when you sit down
-- **Weather announces** â€” real NWS tornado warnings make him say something specific about them
-- **Mood system** â€” a persistent inner state that colours his tone, persists across restarts
-- **Personality switcher** â€” swap between presets (sardonic, helpful, kid-friendly, sailor, custom) at `localhost:8000/settings` with no restart
-- **YouTube music** â€” paste a URL at `localhost:8000/music`, Vector plays it through his speaker
-- **Live status card** â€” real-time camera feed, what he heard, what he's generating token-by-token, battery, sensor data (Pi dashboard or `localhost:8000` via Tailscale)
+- Vector talks to **llama3.3:70b** running locally via Ollama â€" full personality, no cloud latency
+- **Persistent memory** â€" he remembers people, facts, and conversations across sessions
+- **Face recognition** â€" he knows who he's talking to and scopes memory to them
+- **Sensor reactions** â€" pickup, putdown, and touch trigger dry in-character responses
+- **Ambient awareness** â€" he notices things on his desk when idle and remarks on them
+- **Proactive greetings** â€" he greets you by name when you sit down
+- **Weather announces** â€" real NWS tornado warnings make him say something specific about them
+- **Mood system** â€" a persistent inner state that colours his tone, persists across restarts
+- **Personality switcher** â€" swap between presets (sardonic, helpful, kid-friendly, sailor, custom) at `localhost:8000/settings` with no restart
+- **YouTube music** â€" paste a URL at `localhost:8000/music`, Vector plays it through his speaker
+- **Live status card** â€" real-time camera feed, what he heard, what he's generating token-by-token, battery, sensor data (Pi dashboard or `localhost:8000` via Tailscale)
 
 ---
 
@@ -28,9 +28,9 @@ A complete guide to replacing Vector's cloud dependency with a local LLM stack, 
 | RAM | 16GB | 32GB |
 | Storage | 100GB free | NVMe SSD |
 | OS | Windows 10/11 | Windows 11 |
-| Robot | Anki/DDL Vector with **OSKR** firmware | â€” |
+| Robot | Anki/DDL Vector with **OSKR** firmware | â€" |
 
-> **OSKR** (Open Source Kit for Robots) is required â€” standard Vector firmware locks out local server redirects. See [Part 1](#part-1-getting-vector-online).
+> **OSKR** (Open Source Kit for Robots) is required â€" standard Vector firmware locks out local server redirects. See [Part 1](#part-1-getting-vector-online).
 
 Optional:
 - **Raspberry Pi 5** (or any Linux box) for the tornado weather dashboard
@@ -41,24 +41,24 @@ Optional:
 
 Install these before starting:
 
-1. **[Ollama](https://ollama.com)** â€” runs the LLM locally
-2. **Python 3.11+** â€” for vector-ai and the supervisor
-3. **[wire-pod](https://github.com/kercre123/wire-pod)** â€” Vector's cloud replacement (chipper)
+1. **[Ollama](https://ollama.com)** â€" runs the LLM locally
+2. **Python 3.11+** â€" for vector-ai and the supervisor
+3. **[wire-pod](https://github.com/kercre123/wire-pod)** â€" Vector's cloud replacement (chipper)
 4. **Git**
 
 Optional (for music playback):
-- **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** â€” `pip install yt-dlp`
-- **[ffmpeg](https://ffmpeg.org/download.html)** â€” must be in PATH
+- **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** â€" `pip install yt-dlp`
+- **[ffmpeg](https://ffmpeg.org/download.html)** â€" must be in PATH
 > **Windows ffmpeg note:** ffmpeg is rarely on PATH automatically. If you see *"ffprobe and ffmpeg not found"* when using the music player, open `vector-ai/.env` and add:
 > ```
 > FFMPEG_PATH=C:/path/to/ffmpeg/bin/ffmpeg.exe
 > ```
-> VectorMind will use this path for both yt-dlp and audio conversion. The `FFMPEG_PATH` key is already in the `.env` file — just update the value.
+> VectorMind will use this path for both yt-dlp and audio conversion. The `FFMPEG_PATH` key is already in the `.env` file -- just update the value.
 
 Pull the models (this takes a while):
 ```bash
-ollama pull llama3.3:70b    # ~43GB download â€” main model
-ollama pull llama3.2:3b     # ~2GB â€” background summaries/mood
+ollama pull llama3.3:70b    # ~43GB download â€" main model
+ollama pull llama3.2:3b     # ~2GB â€" background summaries/mood
 ```
 
 ---
@@ -73,7 +73,7 @@ Vector needs OSKR (wireOS) firmware to accept a custom server. **Standard firmwa
 
 1. Go to [v.pvic.xyz](https://v.pvic.xyz) or the [wire-pod releases page](https://github.com/kercre123/wire-pod/releases) to download wireOS
 2. Follow the flashing instructions for your Vector model (A7V7, etc.)
-3. After flashing, Vector will show "wireOS" on his face â€” this is correct
+3. After flashing, Vector will show "wireOS" on his face â€" this is correct
 
 ### 1.2 Build and Configure wire-pod
 
@@ -83,7 +83,7 @@ cd wire-pod
 # Build chipper (follow wire-pod's own build instructions for your OS)
 ```
 
-Key config file: `chipper/apiConfig.json` â€” this controls the LLM endpoint, STT provider, and system prompt. See [Part 3](#part-3-the-ai-stack) for the full config.
+Key config file: `chipper/apiConfig.json` â€" this controls the LLM endpoint, STT provider, and system prompt. See [Part 3](#part-3-the-ai-stack) for the full config.
 
 ### 1.3 Set Your Server's mDNS Name
 
@@ -100,7 +100,7 @@ Replace `YOUR_PC_IP` with your PC's LAN IP.
 Vector runs Linux. You need SSH access to redirect his server config.
 
 ```powershell
-# On Windows â€” fix SSH key permissions first
+# On Windows â€" fix SSH key permissions first
 icacls C:\Users\YOU\.ssh\vector_root_key /inheritance:r
 icacls C:\Users\YOU\.ssh\vector_root_key /grant:r "YOU:(R)"
 
@@ -158,11 +158,11 @@ systemctl start anki-robot.target
 
 ### 1.8 BLE Pairing (Initial JWT)
 
-Vector needs one BLE pairing to get his first JWT token from wire-pod. The token refresher only refreshes *existing* tokens â€” it can't create the first one.
+Vector needs one BLE pairing to get his first JWT token from wire-pod. The token refresher only refreshes *existing* tokens â€" it can't create the first one.
 
 1. Make sure wire-pod (chipper) is running on your PC
 2. Go to [wpsetup.keriganc.com](https://wpsetup.keriganc.com) on a phone or laptop with BLE
-3. Follow the pairing flow â€” this calls `AssociatePrimaryUser` on wire-pod and issues the first JWT
+3. Follow the pairing flow â€" this calls `AssociatePrimaryUser` on wire-pod and issues the first JWT
 4. Vector should show solid eyes and connect to your server
 
 **Success indicators in chipper.log:**
@@ -181,23 +181,23 @@ Rather than managing three separate processes, a single supervisor script owns t
 
 ```
 vector-pod/
-â”œâ”€â”€ supervisor.py           # Master process â€” starts/monitors everything
-â”œâ”€â”€ chipper.log             # chipper output
-â”œâ”€â”€ vector-ai.log           # vector-ai output
-â”œâ”€â”€ supervisor.log          # supervisor output
-â”œâ”€â”€ watch.ps1               # Live log monitor (color-coded)
-â”œâ”€â”€ wire-pod/
-â”‚   â””â”€â”€ chipper/
-â”‚       â”œâ”€â”€ chipper-whisper.exe   # Vector's cloud replacement
-â”‚       â”œâ”€â”€ apiConfig.json        # LLM config + system prompt
-â”‚       â””â”€â”€ jdocs/
-â”‚           â””â”€â”€ botSdkInfo.json   # Enrolled robot registry
-â””â”€â”€ vector-ai/
-    â”œâ”€â”€ service.py          # FastAPI LLM proxy + custom endpoints
-    â”œâ”€â”€ memory.py           # SQLite memory store
-    â”œâ”€â”€ memory.db           # Persistent memory database
-    â”œâ”€â”€ .env                # Ollama model config
-    â””â”€â”€ venv/               # Python virtualenv
+â"œâ"€â"€ supervisor.py           # Master process â€" starts/monitors everything
+â"œâ"€â"€ chipper.log             # chipper output
+â"œâ"€â"€ vector-ai.log           # vector-ai output
+â"œâ"€â"€ supervisor.log          # supervisor output
+â"œâ"€â"€ watch.ps1               # Live log monitor (color-coded)
+â"œâ"€â"€ wire-pod/
+â"‚   â""â"€â"€ chipper/
+â"‚       â"œâ"€â"€ chipper-whisper.exe   # Vector's cloud replacement
+â"‚       â"œâ"€â"€ apiConfig.json        # LLM config + system prompt
+â"‚       â""â"€â"€ jdocs/
+â"‚           â""â"€â"€ botSdkInfo.json   # Enrolled robot registry
+â""â"€â"€ vector-ai/
+    â"œâ"€â"€ service.py          # FastAPI LLM proxy + custom endpoints
+    â"œâ"€â"€ memory.py           # SQLite memory store
+    â"œâ"€â"€ memory.db           # Persistent memory database
+    â"œâ"€â"€ .env                # Ollama model config
+    â""â"€â"€ venv/               # Python virtualenv
 ```
 
 ### 2.2 Python Environment
@@ -248,7 +248,7 @@ Register-ScheduledTask `
     -Force
 ```
 
-**Auto-start on login** â€” drop this file in your Startup folder  
+**Auto-start on login** â€" drop this file in your Startup folder  
 (`C:\Users\YOU\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\start-vectorpod.bat`):
 ```bat
 @echo off
@@ -298,7 +298,7 @@ This is chipper's LLM configuration. The critical fields:
 ```
 
 - `endpoint` points to your vector-ai service
-- `openai_prompt` is Vector's system prompt â€” personality, animation commands, vision rules
+- `openai_prompt` is Vector's system prompt â€" personality, animation commands, vision rules
 - `epconfig: true` tells chipper to use the EP (Escape Pod) TLS cert
 
 ### 3.2 vector-ai Endpoints
@@ -307,15 +307,15 @@ vector-ai is a FastAPI service that proxies LLM calls and handles custom feature
 
 | Endpoint | What it does |
 |---|---|
-| `POST /v1/chat/completions` | Main LLM proxy â€” chipper calls this for all voice responses |
-| `POST /v1/sensor_reaction` | Pickup/putdown/touch â†’ one dry in-character line. Skips if model cold (uses chipper fallback) |
+| `POST /v1/chat/completions` | Main LLM proxy â€" chipper calls this for all voice responses |
+| `POST /v1/sensor_reaction` | Pickup/putdown/touch â†' one dry in-character line. Skips if model cold (uses chipper fallback) |
 | `POST /v1/weather_event` | Takes alert data, returns one line. Waits up to 300s for cold model |
 | `POST /v1/weather_announce` | Same + speaks through Vector via chipper say_text |
 | `POST /v1/enroll_face` | Triggers Vector's face-learning sequence |
 | `GET /v1/enrolled_faces` | Lists enrolled faces |
 | `POST /v1/state/face_seen` | Chipper calls this when a face is observed |
 | `GET /v1/state/face` | Current face state |
-| `POST /v1/ambient` | Idle camera frame â†’ comment on novelty (or silence) |
+| `POST /v1/ambient` | Idle camera frame â†' comment on novelty (or silence) |
 | `POST /v1/proactive_greeting` | Greet a recognized face that just appeared |
 | `GET /v1/memory/list` | All stored memories |
 | `POST /v1/memory/remember` | Add a memory manually |
@@ -341,16 +341,16 @@ Vector will say *"Alright. Look at me and I'll remember you as [name]."* then st
 ### 3.4 Firewall
 
 vector-ai binds on `0.0.0.0:8000` so a Pi or other device can call it over Tailscale. The supervisor automatically applies Windows Firewall rules at startup to restrict port 8000 to:
-- `127.0.0.1` â€” local chipper calls
-- `100.64.0.0/10` â€” Tailscale network only
+- `127.0.0.1` â€" local chipper calls
+- `100.64.0.0/10` â€" Tailscale network only
 
 Nothing on the open internet can reach it.
 
 ---
 
-## Part 4: Tornado Weather Dashboard (Optional — Pi required)
+## Part 4: Tornado Weather Dashboard (Optional -- Pi required)
 
-A Flask dashboard on a Raspberry Pi that displays NWS tornado warnings, watches, winter alerts, and hurricane data â€” and has Vector announce new warnings out loud.
+A Flask dashboard on a Raspberry Pi that displays NWS tornado warnings, watches, winter alerts, and hurricane data â€" and has Vector announce new warnings out loud.
 
 ### 4.1 Pi Setup
 
@@ -388,7 +388,7 @@ sudo systemctl start tornado-dashboard
 ### 4.2 How the Announce Works
 
 1. Dashboard polls NWS every 60s
-2. New tornado warning detected â†’ `sent_raw` key not seen before
+2. New tornado warning detected â†' `sent_raw` key not seen before
 3. Pi calls `POST http://WINDOWS_TAILSCALE:8000/v1/weather_announce` with alert data
 4. vector-ai generates one in-character line using llama3.3:70b
 5. vector-ai calls chipper's `say_text` SDK endpoint
@@ -411,13 +411,13 @@ Vector should say something dry about a confirmed tornado in Kansas.
 
 All accessible in your browser while the stack is running.
 
-### 5.1 Personality Switcher â€” `http://localhost:8000/settings`
+### 5.1 Personality Switcher â€" `http://localhost:8000/settings`
 
 Switch Vector's personality without restarting anything. Ships with these presets:
 
 | Preset | Vibe |
 |---|---|
-| Marvin / Bender / Fry | Default â€” dry, sardonic, knowledgeable |
+| Marvin / Bender / Fry | Default â€" dry, sardonic, knowledgeable |
 | Helpful Assistant | Friendly and direct, less snark |
 | Hype Mode | Enthusiastic, everything is amazing |
 | Kid Friendly | Simple, fun, all ages |
@@ -425,7 +425,7 @@ Switch Vector's personality without restarting anything. Ships with these preset
 | Sailor Mouth | Foul-mouthed, zero filter |
 | Custom | Write your own in a text box |
 
-Select a card, hit **Apply**. The next "Hey Vector" uses the new personality. The command/vision/animation rules are always preserved â€” only the character changes.
+Select a card, hit **Apply**. The next "Hey Vector" uses the new personality. The command/vision/animation rules are always preserved â€" only the character changes.
 
 **Adding your own preset:** open `vector-ai/personalities.json` and add an entry to `"presets"`. No restart needed.
 
@@ -437,7 +437,7 @@ Select a card, hit **Apply**. The next "Hey Vector" uses the new personality. Th
 }
 ```
 
-### 5.2 Music Player â€” `http://localhost:8000/music`
+### 5.2 Music Player â€" `http://localhost:8000/music`
 
 Play YouTube audio through Vector's speaker.
 
@@ -448,11 +448,11 @@ pip install yt-dlp
 ```
 
 1. Paste a YouTube URL
-2. Hit **â–¶ Play on Vector**
-3. Status updates: Downloading â†’ Converting â†’ Playing
+2. Hit **â-¶ Play on Vector**
+3. Status updates: Downloading â†' Converting â†' Playing
 4. Recently played tracks appear below for one-click replay
 
-> Vector's speaker runs at 8kHz mono â€” it sounds like a small radio, but it works.
+> Vector's speaker runs at 8kHz mono â€" it sounds like a small radio, but it works.
 
 ---
 
@@ -461,11 +461,11 @@ pip install yt-dlp
 A real-time dashboard showing what Vector is doing, served from the tornado dashboard Pi at `http://PI_IP:8082/vector` or via Tailscale.
 
 **Panels:**
-- **Camera** â€” live MJPEG feed from Vector's front camera (auto-reconnects every 25s)
-- **Live Thought** â€” what Whisper heard (yellow) + the LLM response building token-by-token as Ollama generates it
-- **Status** â€” battery level + voltage, charging state, on desk/picked up, brain loaded/cold, who he sees, quiet mode
-- **Activity Log** â€” real-time stream of heard/said/sensor/face/weather events with ages
-- **Mood** â€” his current inner state from the background mood reflection loop
+- **Camera** â€" live MJPEG feed from Vector's front camera (auto-reconnects every 25s)
+- **Live Thought** â€" what Whisper heard (yellow) + the LLM response building token-by-token as Ollama generates it
+- **Status** â€" battery level + voltage, charging state, on desk/picked up, brain loaded/cold, who he sees, quiet mode
+- **Activity Log** â€" real-time stream of heard/said/sensor/face/weather events with ages
+- **Mood** â€" his current inner state from the background mood reflection loop
 
 The card is also accessible from Windows/Mac via Tailscale with CORS properly configured. Navigate to it from the launcher tile on the Pi or directly via URL.
 
@@ -476,23 +476,23 @@ The card is also accessible from Windows/Mac via Tailscale with CORS properly co
 Open a terminal and watch what Vector hears in real time:
 
 ```powershell
-# Windows â€” launches a color-coded live window
+# Windows â€" launches a color-coded live window
 powershell -ExecutionPolicy Bypass -File C:\path\to\vector-pod\watch.ps1
 ```
 
 Color key:
-- ðŸŸ¡ Yellow â€” what Whisper transcribed
-- ðŸŸ¢ Green â€” LLM response sentences streaming out
-- ðŸ”µ Cyan â€” intent matched
-- ðŸŸ£ Magenta â€” sensor events (pickup/putdown/touch)
-- ðŸ”´ Red â€” errors
+- ðŸŸ¡ Yellow â€" what Whisper transcribed
+- ðŸŸ¢ Green â€" LLM response sentences streaming out
+- ðŸ"µ Cyan â€" intent matched
+- ðŸŸ£ Magenta â€" sensor events (pickup/putdown/touch)
+- ðŸ"´ Red â€" errors
 
 
 ---
 
 ## Driving Vector
 
-For keyboard/controller driving, use **[Vector Explorer](https://weekendrobot.com/vectorexplorer/)** — a free Windows app that gives you WASD control, camera view, and animation triggers. It connects directly to Vector over your LAN and works alongside VectorMind with no conflicts (just stop the supervisor first if you hit behavior control issues).
+For keyboard/controller driving, use **[Vector Explorer](https://weekendrobot.com/vectorexplorer/)** -- a free Windows app that gives you WASD control, camera view, and animation triggers. It connects directly to Vector over your LAN and works alongside VectorMind with no conflicts (just stop the supervisor first if you hit behavior control issues).
 
 ------
 
@@ -505,10 +505,10 @@ His firmware can't reach `escapepod.local`. Check:
 3. `/data/data/wirepod-cert.crt` exists on Vector
 
 **`[sensor] vector-ai call failed: context deadline exceeded`**
-The Go client in chipper has a 12s timeout on sensor reactions. If the model is cold, vector-ai now returns empty immediately so chipper falls back to its built-in phrase pool. This is expected â€” saying "Thank you." is fine. The model will warm up on the next voice interaction.
+The Go client in chipper has a 12s timeout on sensor reactions. If the model is cold, vector-ai now returns empty immediately so chipper falls back to its built-in phrase pool. This is expected â€" saying "Thank you." is fine. The model will warm up on the next voice interaction.
 
 **`Successfully got jdocs` but no voice response**
-Model is probably cold. Say "Hey Vector" â€” the first response after a cold start uses a "loading brain" filler phrase while Ollama loads the model in the background. Subsequent responses are fast.
+Model is probably cold. Say "Hey Vector" â€" the first response after a cold start uses a "loading brain" filler phrase while Ollama loads the model in the background. Subsequent responses are fast.
 
 **BLE pairing page won't load**
 Make sure chipper is running and port 443 is accessible from the device you're pairing from.
@@ -526,9 +526,9 @@ systemctl start anki-robot.target
 
 ## Credits
 
-- **[wire-pod](https://github.com/kercre123/wire-pod)** by kercre123 â€” Vector's cloud replacement
-- **[Ollama](https://ollama.com)** â€” local LLM serving
-- **[vector-go-sdk](https://github.com/fforchino/vector-go-sdk)** by fforchino â€” Go SDK for Vector
+- **[wire-pod](https://github.com/kercre123/wire-pod)** by kercre123 â€" Vector's cloud replacement
+- **[Ollama](https://ollama.com)** â€" local LLM serving
+- **[vector-go-sdk](https://github.com/fforchino/vector-go-sdk)** by fforchino â€" Go SDK for Vector
 - The OSKR/wireOS firmware and the community keeping Vector alive
 
 
