@@ -35,6 +35,9 @@ ollama.log
 patch_*.py
 install_*.py
 
+# ── Personal / separate projects ──────────────────────────────────────────────
+tornado_dashboard_server.py
+
 # ── OS noise ──────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
